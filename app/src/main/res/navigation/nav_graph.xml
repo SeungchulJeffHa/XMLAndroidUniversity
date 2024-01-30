@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/poiFragment">
+
+    <fragment
+        android:id="@+id/poiFragment"
+        android:name="com.example.xmlandroiduniversity.view.poi.PoiFragment"
+        android:label="fragment_poi"
+        tools:layout="@layout/fragment_poi" />
+
+    <action
+        android:id="@+id/action_poiFragment_to_excelFragment"
+        app:destination="@id/excelFragment"
+        app:popUpToInclusive="true" />
+
+    <fragment
+        android:id="@+id/excelFragment"
+        android:name="com.example.xmlandroiduniversity.view.poi.ExcelFragment"
+        android:label="fragment_excel"
+        tools:layout="@layout/fragment_excel" />
+</navigation>
