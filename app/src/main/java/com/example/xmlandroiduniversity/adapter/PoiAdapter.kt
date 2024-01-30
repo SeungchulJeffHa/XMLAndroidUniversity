@@ -27,7 +27,7 @@ class PoiAdapter(private val items: List<ExcelFileEntity>, private val roomDb: R
     }
 
     override fun onBindViewHolder(holder: PoiAdapter.ViewHolder, position: Int) {
-
+        holder.bind(items[position])
     }
 
     override fun getItemCount(): Int = items.size

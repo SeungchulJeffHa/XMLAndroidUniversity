@@ -39,7 +39,7 @@ class PoiFragment : Fragment(), View.OnClickListener {
 
     private val excelVM: ExcelViewModel by activityViewModels()
 
-    private val items = arrayListOf<ExcelFileEntity>()
+    private var items = mutableListOf<ExcelFileEntity>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,7 +57,6 @@ class PoiFragment : Fragment(), View.OnClickListener {
             file.isFile && file.extension == "xlsx"
         }
 
-
         if (files != null) {
             val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
 
@@ -74,6 +73,11 @@ class PoiFragment : Fragment(), View.OnClickListener {
 
             }
         }
+
+        runBlocking {
+            items = roomDb.excelFileDao().select().toMutableList()
+        }
+
 
 
     }
@@ -144,6 +148,9 @@ class PoiFragment : Fragment(), View.OnClickListener {
 
     private fun readExcel() {
         Log.d("POI", "===========================================readExcel")
+
+
+
     }
 
     private fun updateExcel() {

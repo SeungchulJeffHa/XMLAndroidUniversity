@@ -8,7 +8,7 @@ import androidx.room.Query
 interface ExcelFileDao {
 
     @Query("SELECT * FROM excel_file")
-    suspend fun select(): ExcelFileEntity
+    suspend fun select(): List<ExcelFileEntity>
 
     @Insert
     suspend fun insert(entity: ExcelFileEntity)
