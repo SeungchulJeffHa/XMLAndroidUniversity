@@ -70,6 +70,10 @@ class PoiFragment : Fragment(), View.OnClickListener{
             roomDb.excelFileDao().delete()
         }
         loadExcelFile()
+
+        setupRecyclerView(runBlocking {
+            roomDb.excelFileDao().select()
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,6 +152,8 @@ class PoiFragment : Fragment(), View.OnClickListener{
         val adapter = PoiAdapter(items, roomDb, adapterListener)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
+
+        adapter.updateData(items)
     }
 
     private fun createExcel() {

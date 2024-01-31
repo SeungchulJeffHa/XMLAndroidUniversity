@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.xmlandroiduniversity.R
@@ -22,7 +23,7 @@ import com.example.xmlandroiduniversity.viewmodels.ExcelViewModel
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.FileInputStream
 
-class ViewExcelFragment : Fragment() {
+class ViewExcelFragment : Fragment(), View.OnClickListener {
     private var _binding: FragmentViewExcelBinding? = null
     private val binding get() = _binding!!
     protected lateinit var navController: NavController
@@ -41,11 +42,11 @@ class ViewExcelFragment : Fragment() {
 
         with(binding) {
 
-
+            backBtn.setOnClickListener(this@ViewExcelFragment)
 
         }
 
-        val adapter = ViewExcelAdapter(readExcelData())
+        val adapter = ViewExcelAdapter(readExcelData(), excelVM)
         binding.excelTableView.layoutManager = LinearLayoutManager(context)
         binding.excelTableView.adapter = adapter
 
@@ -61,20 +62,14 @@ class ViewExcelFragment : Fragment() {
             }
             dummyData.add(row)
         }
-
-        Log.d("데이터", "=============================================== ${dummyData}")
         return dummyData
     }
-
-
 
     private fun readExcelData(): List<List<String>> {
 
         val excelData: MutableList<MutableList<String>> = mutableListOf()
-
         val externalFilesDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
         val name = "${externalFilesDir}/test2.xlsx"
-
 
         try {
             val workbook = WorkbookFactory.create(FileInputStream(name))
@@ -88,48 +83,29 @@ class ViewExcelFragment : Fragment() {
             }
 
             for (rowIndex in 0 until rowCount) {
-
                 val row = sheet.getRow(rowIndex)
-
                 val rowData: MutableList<String> = mutableListOf()
-
                 for (columnIndex in 0 until columnCount) {
-
                     val cell = row.getCell(columnIndex)
                     Log.d("value", cell.toString())
-
                     rowData.add(cell.toString())
                 }
-
-                Log.d("value", "=================================================${rowData}")
                 excelData.add(rowData)
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
-        Log.d("데이터", "=============================================== ${excelData}")
         return excelData
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    override fun onClick(v: View?) {
+        when(v) {
+            binding.backBtn -> {
+                excelVM.currentX()
+            }
+        }
+    }
 
 
 //    private fun countRowAndColumn() {

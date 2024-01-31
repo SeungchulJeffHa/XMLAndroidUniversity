@@ -3,18 +3,21 @@ package com.example.xmlandroiduniversity.adapter
 import android.content.Context
 import android.content.res.Resources
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.xmlandroiduniversity.R
-import com.example.xmlandroiduniversity.databinding.ListitemExcelListBinding
 import com.example.xmlandroiduniversity.databinding.ListitemExcelRowBinding
+import com.example.xmlandroiduniversity.viewmodels.ExcelViewModel
 
-class ViewExcelAdapter(private val items: List<List<String>>) : RecyclerView.Adapter<ViewExcelAdapter.ViewHolder>() {
+class ViewExcelAdapter(private val items: List<List<String>>, private val viewModel: ExcelViewModel) : RecyclerView.Adapter<ViewExcelAdapter.ViewHolder>() {
 
     private lateinit var context: Context
 
@@ -40,7 +43,17 @@ class ViewExcelAdapter(private val items: List<List<String>>) : RecyclerView.Ada
     inner class ViewHolder(val binding: ListitemExcelRowBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: List<String>) {
             binding.root.removeAllViews()
-            val linearLayout: LinearLayout = binding.root
+
+            val horizontalScrollView = HorizontalScrollView(context)
+
+            val id = View.generateViewId()
+            viewModel.horizontalScrollID.add(id)
+            horizontalScrollView.id = id
+
+            horizontalScrollView.isHorizontalScrollBarEnabled = false
+
+            val linearLayout = LinearLayout(context)
+            linearLayout.orientation = LinearLayout.HORIZONTAL
 
             for (value in item) {
                 val textView = TextView(context)
@@ -49,25 +62,41 @@ class ViewExcelAdapter(private val items: List<List<String>>) : RecyclerView.Ada
                 val layoutParams = LinearLayout.LayoutParams(
                     80.dpToPx(),
                     50.dpToPx()
-//                    LinearLayout.LayoutParams.WRAP_CONTENT
                 )
 
                 val shapeDrawable = ContextCompat.getDrawable(context, R.drawable.border_background)
                 textView.background = shapeDrawable
+                textView.gravity = Gravity.CENTER
 
                 textView.setTextColor(ContextCompat.getColor(context, R.color.black))
                 textView.setPadding(16, 16, 16, 16)
-
 
                 textView.layoutParams = layoutParams
 
                 linearLayout.addView(textView)
             }
+
+            horizontalScrollView.addView(linearLayout)
+            binding.root.addView(horizontalScrollView)
+
+            horizontalScrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
+                // 스크롤이 변경될 때마다 호출되는 콜백
+                Log.d("Scroll", "X 좌표: $scrollX")
+                viewModel.coordinateX = scrollX
+
+                for (i in viewModel.horizontalScrollID) {
+                    val scrollView = binding.root.findViewById<HorizontalScrollView>(i)
+                    scrollView?.post {
+                        // Use post to ensure that scrollTo is executed after the view is laid out
+                        scrollView.scrollTo(viewModel.coordinateX, 0)
+                    }
+                }
+            }
         }
     }
+}
 
-    fun Int.dpToPx(): Int {
-        val scale = Resources.getSystem().displayMetrics.density
-        return (this * scale + 0.5f).toInt()
-    }
+fun Int.dpToPx(): Int {
+    val scale = Resources.getSystem().displayMetrics.density
+    return (this * scale + 0.5f).toInt()
 }

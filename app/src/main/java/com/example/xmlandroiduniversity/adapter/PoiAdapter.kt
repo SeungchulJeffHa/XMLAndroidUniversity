@@ -12,7 +12,7 @@ import com.example.xmlandroiduniversity.databinding.ListitemExcelListBinding
 import com.example.xmlandroiduniversity.db.ExcelFileEntity
 import com.example.xmlandroiduniversity.db.RoomDb
 
-class PoiAdapter(private val items: List<ExcelFileEntity>, private val roomDb: RoomDb, private val listener: POIAdapterListener) : RecyclerView.Adapter<PoiAdapter.ViewHolder>() {
+class PoiAdapter(private var items: List<ExcelFileEntity>, private val roomDb: RoomDb, private val listener: POIAdapterListener) : RecyclerView.Adapter<PoiAdapter.ViewHolder>() {
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PoiAdapter.ViewHolder {
@@ -41,6 +41,11 @@ class PoiAdapter(private val items: List<ExcelFileEntity>, private val roomDb: R
         Log.d("아이템 개스", "=========================================${items.size}")
 
         return items.size
+    }
+
+    fun updateData(newData: List<ExcelFileEntity>) {
+        items = newData
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(val binding: ListitemExcelListBinding) : RecyclerView.ViewHolder(binding.root) {
