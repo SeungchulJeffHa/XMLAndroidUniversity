@@ -50,6 +50,12 @@ class PoiFragment : Fragment(), View.OnClickListener{
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView(items)
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -113,9 +119,6 @@ class PoiFragment : Fragment(), View.OnClickListener{
             readBtn.setOnClickListener(this@PoiFragment)
             updateBtn.setOnClickListener(this@PoiFragment)
             deleteBtn.setOnClickListener(this@PoiFragment)
-
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            recyclerView.adapter = PoiAdapter(items, roomDb, adapterListener)
         }
 
         return binding.root
@@ -139,6 +142,12 @@ class PoiFragment : Fragment(), View.OnClickListener{
                 deleteExcel()
             }
         }
+    }
+
+    private fun setupRecyclerView(dataList: List<ExcelFileEntity>) {
+        val adapter = PoiAdapter(items, roomDb, adapterListener)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = adapter
     }
 
     private fun createExcel() {

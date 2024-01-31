@@ -1,6 +1,7 @@
 package com.example.xmlandroiduniversity.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +36,12 @@ class PoiAdapter(private val items: List<ExcelFileEntity>, private val roomDb: R
         }
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int {
+
+        Log.d("아이템 개스", "=========================================${items.size}")
+
+        return items.size
+    }
 
     inner class ViewHolder(val binding: ListitemExcelListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ExcelFileEntity) {
