@@ -11,7 +11,7 @@ import com.example.xmlandroiduniversity.databinding.ListitemExcelListBinding
 import com.example.xmlandroiduniversity.db.ExcelFileEntity
 import com.example.xmlandroiduniversity.db.RoomDb
 
-class PoiAdapter(private val items: List<ExcelFileEntity>, private val roomDb: RoomDb) : RecyclerView.Adapter<PoiAdapter.ViewHolder>() {
+class PoiAdapter(private val items: List<ExcelFileEntity>, private val roomDb: RoomDb, private val listener: POIAdapterListener) : RecyclerView.Adapter<PoiAdapter.ViewHolder>() {
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PoiAdapter.ViewHolder {
@@ -27,15 +27,24 @@ class PoiAdapter(private val items: List<ExcelFileEntity>, private val roomDb: R
     }
 
     override fun onBindViewHolder(holder: PoiAdapter.ViewHolder, position: Int) {
-        holder.bind(items[position])
+        val item = items[position]
+        holder.bind(item)
+
+        holder.itemView.setOnClickListener {
+            listener.onListItemPressed(item)
+        }
     }
 
     override fun getItemCount(): Int = items.size
 
-    inner class ViewHolder(private val binding: ListitemExcelListBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: ListitemExcelListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ExcelFileEntity) {
             binding.excelName.text = item.name
             binding.excelCreatedAt.text = item.createdAt
+
+            binding.slctFile.setOnClickListener {
+                listener.onListItemCheckboxPressed(item)
+            }
         }
     }
 }

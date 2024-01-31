@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.poi.ExcelFragment">
+    tools:context=".view.poi.CreateExcelFragment">
 
     <EditText
         android:id="@+id/filenameField"
@@ -16,6 +16,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=".xlsx"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/filenameField"
+        app:layout_constraintBaseline_toBaselineOf="@id/filenameField"/>
 
     <View
         android:id="@+id/divider3"

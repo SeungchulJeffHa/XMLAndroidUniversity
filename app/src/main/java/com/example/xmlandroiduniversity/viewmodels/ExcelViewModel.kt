@@ -8,4 +8,5 @@ class ExcelViewModel : ViewModel() {
     var filename: String? = null
     var subwayData = mutableListOf<SubwayData>()
 
+    var selectedIDs = mutableListOf<Int>()
 }

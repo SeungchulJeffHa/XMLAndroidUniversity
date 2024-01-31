@@ -1,5 +1,6 @@
 package com.example.xmlandroiduniversity.view.poi
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.os.Environment.DIRECTORY_DOWNLOADS
@@ -14,7 +15,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.xmlandroiduniversity.MainActivity
-import com.example.xmlandroiduniversity.R.id.action_poiFragment_to_excelFragment
+import com.example.xmlandroiduniversity.R.id.action_poiFragment_to_creatExcelFragment
+import com.example.xmlandroiduniversity.R.id.action_poiFragment_to_viewExcelFragment
+import com.example.xmlandroiduniversity.adapter.POIAdapterListener
 import com.example.xmlandroiduniversity.adapter.PoiAdapter
 import com.example.xmlandroiduniversity.databinding.DialogCreateExcelBinding
 import com.example.xmlandroiduniversity.databinding.FragmentPoiBinding
@@ -27,19 +30,25 @@ import java.util.Date
 import java.util.Locale
 
 
-class PoiFragment : Fragment(), View.OnClickListener {
-
-
+class PoiFragment : Fragment(), View.OnClickListener{
     private var _binding: FragmentPoiBinding? = null
     private val binding get() = _binding!!
     protected lateinit var navController: NavController
-
     protected lateinit var roomDb: RoomDb
     private lateinit var mainActivity: MainActivity
-
     private val excelVM: ExcelViewModel by activityViewModels()
-
     private var items = mutableListOf<ExcelFileEntity>()
+
+    private val adapterListener = object : POIAdapterListener {
+        override fun onListItemPressed(data: ExcelFileEntity) {
+//            super.onListItemPressed(data)
+            Log.d("Info Entity", "$data")
+        }
+
+        override fun onListItemCheckboxPressed(data: ExcelFileEntity) {
+            super.onListItemCheckboxPressed(data)
+        }
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,9 +58,23 @@ class PoiFragment : Fragment(), View.OnClickListener {
         navController = findNavController()
     }
 
+    override fun onResume() {
+        super.onResume()
+        runBlocking {
+            roomDb.excelFileDao().delete()
+        }
+        loadExcelFile()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        runBlocking {
+            roomDb.excelFileDao().delete()
+        }
+        loadExcelFile()
+    }
 
+    private fun loadExcelFile() {
         val externalFilesDir = requireContext().getExternalFilesDir(DIRECTORY_DOWNLOADS)
         val files = externalFilesDir?.listFiles { file ->
             file.isFile && file.extension == "xlsx"
@@ -61,27 +84,23 @@ class PoiFragment : Fragment(), View.OnClickListener {
             val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
 
             for (file in files) {
-                println("File name: ${file.name}")
-                println("File path: ${file.absolutePath}")
-
-                val creationDate = Date(file.lastModified())
+                val fileLastModified = System.currentTimeMillis() // 예시로 현재 시간을 사용했지만, 실제로는 file.lastModified()로 사용해야 합니다.
+                val creationDate = Date(fileLastModified)
+                val dateFormat = SimpleDateFormat("yyyyMMdd")
                 val formattedDate = dateFormat.format(creationDate)
 
                 runBlocking {
-                    roomDb.excelFileDao().insert(ExcelFileEntity(file.name, creationDate.toString(), false))
+                    roomDb.excelFileDao().insert(ExcelFileEntity(file.name, formattedDate))
                 }
-
             }
         }
 
         runBlocking {
             items = roomDb.excelFileDao().select().toMutableList()
         }
-
-
-
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -96,7 +115,7 @@ class PoiFragment : Fragment(), View.OnClickListener {
             deleteBtn.setOnClickListener(this@PoiFragment)
 
             recyclerView.layoutManager = LinearLayoutManager(context)
-            recyclerView.adapter = PoiAdapter(items, roomDb)
+            recyclerView.adapter = PoiAdapter(items, roomDb, adapterListener)
         }
 
         return binding.root
@@ -129,7 +148,6 @@ class PoiFragment : Fragment(), View.OnClickListener {
 
         DialogCreateExcelBinding.inflate(LayoutInflater.from(requireContext())).apply {
             val alertDialog = AlertDialog.Builder(requireContext()).setView(root).create()
-
             alertDialog.show()
 
             cancelBtn.setOnClickListener {
@@ -137,10 +155,9 @@ class PoiFragment : Fragment(), View.OnClickListener {
             }
 
             createBtn.setOnClickListener {
-
                 excelVM.filename = filenameField.text.toString()
                 alertDialog.dismiss()
-                navController.navigate(action_poiFragment_to_excelFragment)
+                navController.navigate(action_poiFragment_to_creatExcelFragment)
             }
         }
 
@@ -149,8 +166,7 @@ class PoiFragment : Fragment(), View.OnClickListener {
     private fun readExcel() {
         Log.d("POI", "===========================================readExcel")
 
-
-
+        navController.navigate(action_poiFragment_to_viewExcelFragment)
     }
 
     private fun updateExcel() {

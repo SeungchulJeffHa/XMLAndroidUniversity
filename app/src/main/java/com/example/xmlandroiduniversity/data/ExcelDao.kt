@@ -6,11 +6,10 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 
-@Dao
+//@Dao
 interface ExcelDao {
     @Insert
     suspend fun createExcel()
-
 }
 
 @Entity(tableName = "subway_station")

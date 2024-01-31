@@ -8,8 +8,7 @@ import androidx.room.PrimaryKey
 data class ExcelFileEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "createdAt") val createdAt: String,
-    @ColumnInfo(name = "isSelected") val isSelected: Boolean,
-
+//    @ColumnInfo(name = "isSelected") var isSelected: Boolean,
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") var stationId: Long = 0
 )

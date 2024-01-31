@@ -12,13 +12,22 @@
         tools:layout="@layout/fragment_poi" />
 
     <action
-        android:id="@+id/action_poiFragment_to_excelFragment"
-        app:destination="@id/excelFragment"
-        app:popUpToInclusive="true" />
+        android:id="@+id/action_poiFragment_to_creatExcelFragment"
+        app:destination="@id/creatExcelFragment" />
 
     <fragment
-        android:id="@+id/excelFragment"
-        android:name="com.example.xmlandroiduniversity.view.poi.ExcelFragment"
+        android:id="@+id/creatExcelFragment"
+        android:name="com.example.xmlandroiduniversity.view.poi.CreateExcelFragment"
         android:label="fragment_excel"
-        tools:layout="@layout/fragment_excel" />
+        tools:layout="@layout/fragment_create_excel" />
+
+    <action
+        android:id="@+id/action_poiFragment_to_viewExcelFragment"
+        app:destination="@id/viewExcelFragment" />
+
+    <fragment
+        android:id="@+id/viewExcelFragment"
+        android:name="com.example.xmlandroiduniversity.view.poi.ViewExcelFragment"
+        android:label="fragment_view_excel"
+        tools:layout="@layout/fragment_view_excel" />
 </navigation>

@@ -1,13 +1,9 @@
 package com.example.xmlandroiduniversity.view.poi
 
 import android.Manifest
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
 import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.example.xmlandroiduniversity.databinding.FragmentExcelBinding
+import com.example.xmlandroiduniversity.databinding.FragmentCreateExcelBinding
 import com.example.xmlandroiduniversity.viewmodels.ExcelViewModel
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
@@ -27,10 +23,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
+class CreateExcelFragment : Fragment(), View.OnClickListener {
 
-class ExcelFragment : Fragment(), View.OnClickListener {
-
-    private var _binding: FragmentExcelBinding? = null
+    private var _binding: FragmentCreateExcelBinding? = null
     private val binding get() = _binding!!
     protected lateinit var navController: NavController
 
@@ -39,7 +34,7 @@ class ExcelFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.filenameField.setText(excelVM.filename + ".xlsx")
+        binding.filenameField.setText(excelVM.filename)
     }
 
 
@@ -55,11 +50,11 @@ class ExcelFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        _binding = FragmentExcelBinding.inflate(inflater, container, false)
+        _binding = FragmentCreateExcelBinding.inflate(inflater, container, false)
 
         with(binding) {
-            postiveBtn.setOnClickListener(this@ExcelFragment)
-            negativeBtn.setOnClickListener(this@ExcelFragment)
+            postiveBtn.setOnClickListener(this@CreateExcelFragment)
+            negativeBtn.setOnClickListener(this@CreateExcelFragment)
         }
 
         return binding.root
@@ -100,25 +95,40 @@ class ExcelFragment : Fragment(), View.OnClickListener {
 
         // 헤더 추가
         val headerRow = sheet.createRow(0)
-        val headers = arrayOf("name", "line", "order")
+        val headers = arrayOf("name", "line", "order", "name", "name", "line", "order", "name", "name", "line", "order", "name")
         for ((index, header) in headers.withIndex()) {
             val cell: Cell = headerRow.createCell(index)
             cell.setCellValue(header)
         }
 
         // 데이터 추가
-        for ((index, data) in excelVM.subwayData.withIndex()) {
-            val row = sheet.createRow(index + 1)
-            row.createCell(0).setCellValue(data.name)
-            row.createCell(1).setCellValue(data.line.toString())
-            row.createCell(2).setCellValue(data.order.toString())
+        for (i in 0 until 20) {
+            val row = sheet.createRow(i+1)
+            row.createCell(0).setCellValue("${i+1}")
+            row.createCell(1).setCellValue("${i+1}")
+            row.createCell(2).setCellValue("${i+1}")
+            row.createCell(3).setCellValue("${i+1}")
+            row.createCell(4).setCellValue("${i+1}")
+            row.createCell(5).setCellValue("${i+1}")
+            row.createCell(6).setCellValue("${i+1}")
+            row.createCell(7).setCellValue("${i+1}")
+            row.createCell(8).setCellValue("${i+1}")
+            row.createCell(9).setCellValue("${i+1}")
+            row.createCell(10).setCellValue("${i+1}")
+            row.createCell(11).setCellValue("${i+1}")
         }
+//        for ((index, data) in excelVM.subwayData.withIndex()) {
+//            val row = sheet.createRow(index + 1)
+//            row.createCell(0).setCellValue(data.name)
+//            row.createCell(1).setCellValue(data.line.toString())
+//            row.createCell(2).setCellValue(data.order.toString())
+//        }
 
         // 파일 저장
         val filename = binding.filenameField.text.toString()
         val externalFilesDir = requireContext().getExternalFilesDir(DIRECTORY_DOWNLOADS)
         if (externalFilesDir != null) {
-            val filePath = File(externalFilesDir, "$filename")
+            val filePath = File(externalFilesDir, "$filename.xlsx")
             Log.d("파일 경로", filePath.absolutePath)
 
             try {
