@@ -198,34 +198,38 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
 
         // 헤더 추가
         val headerRow = sheet.createRow(0)
-        val headers = arrayOf("name", "line", "order", "name", "name", "line", "order", "name", "name", "line", "order", "name")
-        for ((index, header) in headers.withIndex()) {
-            val cell: Cell = headerRow.createCell(index)
-            cell.setCellValue(header)
+//        val headers = arrayOf("name", "line", "order", "name", "name", "line", "order", "name", "name", "line", "order", "name")
+//        for ((index, header) in headers.withIndex()) {
+//            val cell: Cell = headerRow.createCell(index)
+//            cell.setCellValue(header)
+//        }
+
+        for (i in 1..excelVM.colCount) {
+            val cell: Cell = headerRow.createCell(i-1)
+
+            val editText = binding.root.findViewWithTag<EditText>("row1col${i}")
+
+            val value = editText.text.toString()
+
+            cell.setCellValue(value)
+
+
         }
 
         // 데이터 추가
-        for (i in 0 until 20) {
-            val row = sheet.createRow(i + 1)
-            row.createCell(0).setCellValue("${i + 1}")
-            row.createCell(1).setCellValue("${i + 1}")
-            row.createCell(2).setCellValue("${i + 1}")
-            row.createCell(3).setCellValue("${i + 1}")
-            row.createCell(4).setCellValue("${i + 1}")
-            row.createCell(5).setCellValue("${i + 1}")
-            row.createCell(6).setCellValue("${i + 1}")
-            row.createCell(7).setCellValue("${i + 1}")
-            row.createCell(8).setCellValue("${i + 1}")
-            row.createCell(9).setCellValue("${i + 1}")
-            row.createCell(10).setCellValue("${i + 1}")
-            row.createCell(11).setCellValue("${i + 1}")
+
+        for (i in 1..excelVM.rowCount) {
+            val row = sheet.createRow(i-1)
+            for(j in 1..excelVM.colCount) {
+
+                val editText = binding.root.findViewWithTag<EditText>("row${i}col${j}")
+
+                val value = editText.text.toString()
+
+                row.createCell(j-1).setCellValue(value)
+            }
         }
-//        for ((index, data) in excelVM.subwayData.withIndex()) {
-//            val row = sheet.createRow(index + 1)
-//            row.createCell(0).setCellValue(data.name)
-//            row.createCell(1).setCellValue(data.line.toString())
-//            row.createCell(2).setCellValue(data.order.toString())
-//        }
+
 
         // 파일 저장
         val filename = binding.filenameField.text.toString()
