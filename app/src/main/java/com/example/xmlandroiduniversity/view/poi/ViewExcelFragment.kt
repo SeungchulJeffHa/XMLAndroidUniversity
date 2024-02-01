@@ -102,7 +102,7 @@ class ViewExcelFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when(v) {
             binding.backBtn -> {
-                excelVM.currentX()
+
             }
         }
     }

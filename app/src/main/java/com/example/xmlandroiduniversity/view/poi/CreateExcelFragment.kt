@@ -9,12 +9,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.xmlandroiduniversity.R
 import com.example.xmlandroiduniversity.databinding.FragmentCreateExcelBinding
 import com.example.xmlandroiduniversity.viewmodels.ExcelViewModel
 import org.apache.poi.ss.usermodel.Cell
@@ -33,17 +38,15 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.filenameField.setText(excelVM.filename)
+        binding.columnCount.setText(excelVM.colCount.toString())
+        binding.rowCount.setText(excelVM.rowCount.toString())
     }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
         navController = findNavController()
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +58,8 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
         with(binding) {
             postiveBtn.setOnClickListener(this@CreateExcelFragment)
             negativeBtn.setOnClickListener(this@CreateExcelFragment)
+            addColBtn.setOnClickListener(this@CreateExcelFragment)
+            addRowBtn.setOnClickListener(this@CreateExcelFragment)
         }
 
         return binding.root
@@ -62,8 +67,93 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
+            binding.addColBtn -> {
+                excelVM.colCount += 1
+                binding.columnCount.setText(excelVM.colCount.toString())
+
+                val allboxLayout = binding.root.findViewById<LinearLayout>(R.id.allbox)
+                allboxLayout.removeAllViews()
+
+                for (i in 1..excelVM.rowCount) {
+                    val tagname = "row${i}"
+                    val row = binding.root.findViewWithTag<LinearLayout>(tagname)
+
+                    if (row != null) {
+                        val newEditText = EditText(requireContext())
+                        newEditText.layoutParams = LinearLayout.LayoutParams(
+                            80.dpToPx(),
+                            50.dpToPx()
+                        )
+                        newEditText.setBackgroundResource(R.drawable.border_background)
+                        newEditText.tag = "row${i}col${excelVM.colCount}"
+                        row.addView(newEditText)
+                    } else {
+                        Toast.makeText(context, "널이야", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            binding.addRowBtn -> {
+                excelVM.rowCount += 1
+                binding.columnCount.setText(excelVM.rowCount.toString())
+
+                for (i in 1..excelVM.rowCount) {
+                    val newLinearLayout = LinearLayout(requireContext())
+                    newLinearLayout.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    newLinearLayout.orientation = LinearLayout.HORIZONTAL
+                    newLinearLayout.tag = "row${excelVM.rowCount}"
+
+                    val boxLayout = binding.root.findViewById<LinearLayout>(R.id.allbox)
+                    boxLayout.addView(newLinearLayout)
+
+                    for (j in 1..excelVM.colCount) {
+                        val tagname = "row${i}"
+                        val row = binding.root.findViewWithTag<LinearLayout>(tagname)
+
+                        if (row != null) {
+                            val newEditText = EditText(requireContext())
+                            newEditText.layoutParams = LinearLayout.LayoutParams(
+                                80.dpToPx(),
+                                50.dpToPx()
+                            )
+                            newEditText.setBackgroundResource(R.drawable.border_background)
+                            newEditText.tag = "row${i}col${excelVM.colCount}"
+                            row.addView(newEditText)
+                        } else {
+                            Toast.makeText(context, "널이야", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+//                    for (j in 1..excelVM.colCount) {
+//                        val newEditText = EditText(requireContext())
+//                        newEditText.layoutParams = LinearLayout.LayoutParams(
+//                            80.dpToPx(),
+//                            50.dpToPx()
+//                        )
+//                        newEditText.setBackgroundResource(R.drawable.border_background)
+//                        newEditText.tag = "row${excelVM.rowCount}col${excelVM.colCount}"
+//                        newLinearLayout.addView(newEditText)
+//                        val boxLayout = binding.root.findViewById<LinearLayout>(R.id.allbox)
+//                        boxLayout.addView(newLinearLayout)
+//                    }
+                }
+
+
+
+
+
+
+            }
+
             binding.postiveBtn -> {
-                permissionCheck()
+                if (binding.filenameField.text.toString().isNotEmpty()) {
+                    permissionCheck()
+                } else {
+                    Toast.makeText(context, "파일명을 입력해주셔야합니다", Toast.LENGTH_SHORT).show();
+                }
             }
 
             binding.negativeBtn -> {
@@ -71,7 +161,6 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
             }
         }
     }
-
 
     private fun permissionCheck() {
         if (ContextCompat.checkSelfPermission(
@@ -103,19 +192,19 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
 
         // 데이터 추가
         for (i in 0 until 20) {
-            val row = sheet.createRow(i+1)
-            row.createCell(0).setCellValue("${i+1}")
-            row.createCell(1).setCellValue("${i+1}")
-            row.createCell(2).setCellValue("${i+1}")
-            row.createCell(3).setCellValue("${i+1}")
-            row.createCell(4).setCellValue("${i+1}")
-            row.createCell(5).setCellValue("${i+1}")
-            row.createCell(6).setCellValue("${i+1}")
-            row.createCell(7).setCellValue("${i+1}")
-            row.createCell(8).setCellValue("${i+1}")
-            row.createCell(9).setCellValue("${i+1}")
-            row.createCell(10).setCellValue("${i+1}")
-            row.createCell(11).setCellValue("${i+1}")
+            val row = sheet.createRow(i + 1)
+            row.createCell(0).setCellValue("${i + 1}")
+            row.createCell(1).setCellValue("${i + 1}")
+            row.createCell(2).setCellValue("${i + 1}")
+            row.createCell(3).setCellValue("${i + 1}")
+            row.createCell(4).setCellValue("${i + 1}")
+            row.createCell(5).setCellValue("${i + 1}")
+            row.createCell(6).setCellValue("${i + 1}")
+            row.createCell(7).setCellValue("${i + 1}")
+            row.createCell(8).setCellValue("${i + 1}")
+            row.createCell(9).setCellValue("${i + 1}")
+            row.createCell(10).setCellValue("${i + 1}")
+            row.createCell(11).setCellValue("${i + 1}")
         }
 //        for ((index, data) in excelVM.subwayData.withIndex()) {
 //            val row = sheet.createRow(index + 1)
@@ -148,5 +237,10 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
             Log.e("에러", "External files directory is null")
         }
 
+    }
+
+    fun Int.dpToPx(): Int {
+        val scale = resources.displayMetrics.density
+        return (this * scale + 0.5f).toInt()
     }
 }

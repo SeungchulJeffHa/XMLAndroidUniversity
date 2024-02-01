@@ -8,17 +8,11 @@ class ExcelViewModel : ViewModel() {
 
     var filename: String? = null
     var subwayData = mutableListOf<SubwayData>()
-
     var selectedIDs = mutableListOf<Int>()
-
-    var coordinateX = 0
-
     var horizontalScrollID: MutableList<Int> = mutableListOf()
 
-    fun currentX() {
-        Log.d(
-            "X의 위치",
-            "===============================================================${coordinateX}================================================"
-        )
-    }
+    var colCount: Int = 1
+    var rowCount: Int = 1
+
+
 }

@@ -79,19 +79,7 @@ class ViewExcelAdapter(private val items: List<List<String>>, private val viewMo
             horizontalScrollView.addView(linearLayout)
             binding.root.addView(horizontalScrollView)
 
-            horizontalScrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
-                // 스크롤이 변경될 때마다 호출되는 콜백
-                Log.d("Scroll", "X 좌표: $scrollX")
-                viewModel.coordinateX = scrollX
 
-                for (i in viewModel.horizontalScrollID) {
-                    val scrollView = binding.root.findViewById<HorizontalScrollView>(i)
-                    scrollView?.post {
-                        // Use post to ensure that scrollTo is executed after the view is laid out
-                        scrollView.scrollTo(viewModel.coordinateX, 0)
-                    }
-                }
-            }
         }
     }
 }
