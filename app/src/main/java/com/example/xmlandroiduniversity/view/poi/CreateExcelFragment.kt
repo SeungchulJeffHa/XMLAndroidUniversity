@@ -3,6 +3,7 @@ package com.example.xmlandroiduniversity.view.poi
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.util.Log
@@ -65,87 +66,75 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
         return binding.root
     }
 
+    val colorList = listOf(
+        Color.RED,
+        Color.BLUE,
+        Color.GREEN,
+        Color.YELLOW,
+        Color.CYAN,
+        Color.MAGENTA,
+    )
+
     override fun onClick(v: View?) {
         when (v) {
             binding.addColBtn -> {
                 excelVM.colCount += 1
                 binding.columnCount.setText(excelVM.colCount.toString())
 
-                val allboxLayout = binding.root.findViewById<LinearLayout>(R.id.allbox)
-                allboxLayout.removeAllViews()
-
                 for (i in 1..excelVM.rowCount) {
-                    val tagname = "row${i}"
-                    val row = binding.root.findViewWithTag<LinearLayout>(tagname)
+                    val boxLayout = binding.root.findViewById<LinearLayout>(R.id.allbox)
+                    val rowTag = "row$i"
 
-                    if (row != null) {
-                        val newEditText = EditText(requireContext())
-                        newEditText.layoutParams = LinearLayout.LayoutParams(
-                            80.dpToPx(),
-                            50.dpToPx()
-                        )
-                        newEditText.setBackgroundResource(R.drawable.border_background)
-                        newEditText.tag = "row${i}col${excelVM.colCount}"
-                        row.addView(newEditText)
-                    } else {
-                        Toast.makeText(context, "널이야", Toast.LENGTH_SHORT).show()
+                    // Check if the row with the specified tag already exists
+                    val existingRow = binding.root.findViewWithTag<LinearLayout>(rowTag)
+                    if (existingRow == null) {
+                        boxLayout.addView(addLinearLayout(i))
+                    }
+
+                    for (j in 1..excelVM.colCount) {
+                        Log.d("order", "row: $i, column: $j")
+                        val colTag = "row$i" + "col$j"
+
+                        // Check if the EditText with the specified tag already exists
+                        val existingEditText = binding.root.findViewWithTag<EditText>(colTag)
+                        if (existingEditText == null) {
+                            val row = binding.root.findViewWithTag<LinearLayout>(rowTag)
+
+                            row.addView(addEditText(i, j))
+                        }
                     }
                 }
             }
 
             binding.addRowBtn -> {
                 excelVM.rowCount += 1
-                binding.columnCount.setText(excelVM.rowCount.toString())
+                binding.rowCount.setText(excelVM.rowCount.toString())
 
                 for (i in 1..excelVM.rowCount) {
-                    val newLinearLayout = LinearLayout(requireContext())
-                    newLinearLayout.layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    newLinearLayout.orientation = LinearLayout.HORIZONTAL
-                    newLinearLayout.tag = "row${excelVM.rowCount}"
-
                     val boxLayout = binding.root.findViewById<LinearLayout>(R.id.allbox)
-                    boxLayout.addView(newLinearLayout)
+                    val rowTag = "row$i"
 
-                    for (j in 1..excelVM.colCount) {
-                        val tagname = "row${i}"
-                        val row = binding.root.findViewWithTag<LinearLayout>(tagname)
-
-                        if (row != null) {
-                            val newEditText = EditText(requireContext())
-                            newEditText.layoutParams = LinearLayout.LayoutParams(
-                                80.dpToPx(),
-                                50.dpToPx()
-                            )
-                            newEditText.setBackgroundResource(R.drawable.border_background)
-                            newEditText.tag = "row${i}col${excelVM.colCount}"
-                            row.addView(newEditText)
-                        } else {
-                            Toast.makeText(context, "널이야", Toast.LENGTH_SHORT).show()
-                        }
+                    // Check if the row with the specified tag already exists
+                    val existingRow = binding.root.findViewWithTag<LinearLayout>(rowTag)
+                    if (existingRow == null) {
+                        boxLayout.addView(addLinearLayout(i))
                     }
 
-//                    for (j in 1..excelVM.colCount) {
-//                        val newEditText = EditText(requireContext())
-//                        newEditText.layoutParams = LinearLayout.LayoutParams(
-//                            80.dpToPx(),
-//                            50.dpToPx()
-//                        )
-//                        newEditText.setBackgroundResource(R.drawable.border_background)
-//                        newEditText.tag = "row${excelVM.rowCount}col${excelVM.colCount}"
-//                        newLinearLayout.addView(newEditText)
-//                        val boxLayout = binding.root.findViewById<LinearLayout>(R.id.allbox)
-//                        boxLayout.addView(newLinearLayout)
-//                    }
+                    for (j in 1..excelVM.colCount) {
+                        Log.d("order", "row: $i, column: $j")
+                        val colTag = "row$i" + "col$j"
+
+                        // Check if the EditText with the specified tag already exists
+                        val existingEditText = binding.root.findViewWithTag<EditText>(colTag)
+                        if (existingEditText == null) {
+                            val row = binding.root.findViewWithTag<LinearLayout>(rowTag)
+
+                            if (i != 1) {
+                                row.addView(addEditText(i, j))
+                            }
+                        }
+                    }
                 }
-
-
-
-
-
-
             }
 
             binding.postiveBtn -> {
@@ -157,9 +146,34 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
             }
 
             binding.negativeBtn -> {
+                excelVM.resetCellCount()
                 navController.popBackStack()
             }
         }
+    }
+
+    private fun addEditText(row: Int, col: Int): EditText {
+        val newEditText = EditText(requireContext())
+        newEditText.layoutParams = LinearLayout.LayoutParams(
+            80.dpToPx(),
+            50.dpToPx()
+        )
+        newEditText.setBackgroundResource(R.drawable.border_background)
+        newEditText.tag = "row${row}col${col}"
+        return newEditText
+    }
+
+    private fun addLinearLayout(row: Int): LinearLayout {
+        val newLinearLayout = LinearLayout(requireContext())
+        newLinearLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        newLinearLayout.orientation = LinearLayout.HORIZONTAL
+        newLinearLayout.setBackgroundColor(colorList[row % 6])
+        newLinearLayout.tag = "row${row}"
+
+        return newLinearLayout
     }
 
     private fun permissionCheck() {

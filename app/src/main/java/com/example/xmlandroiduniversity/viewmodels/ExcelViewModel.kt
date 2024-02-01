@@ -14,5 +14,9 @@ class ExcelViewModel : ViewModel() {
     var colCount: Int = 1
     var rowCount: Int = 1
 
+    fun resetCellCount() {
+        colCount = 1
+        rowCount = 1
+    }
 
 }
