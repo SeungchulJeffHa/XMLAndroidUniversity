@@ -76,6 +76,9 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.2.5")
 
 
+    // SWIPE MODULE
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
     implementation("com.google.dagger:dagger:2.48")
     annotationProcessor("com.google.dagger:dagger-compiler:2.33")
 }
