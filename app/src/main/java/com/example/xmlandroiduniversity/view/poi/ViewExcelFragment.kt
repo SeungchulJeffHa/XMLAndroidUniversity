@@ -69,7 +69,7 @@ class ViewExcelFragment : Fragment(), View.OnClickListener {
 
         val excelData: MutableList<MutableList<String>> = mutableListOf()
         val externalFilesDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-        val name = "${externalFilesDir}/test2.xlsx"
+        val name = "${externalFilesDir}/${excelVM.filename}"
 
         try {
             val workbook = WorkbookFactory.create(FileInputStream(name))

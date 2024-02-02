@@ -230,7 +230,6 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
             }
         }
 
-
         // 파일 저장
         val filename = binding.filenameField.text.toString()
         val externalFilesDir = requireContext().getExternalFilesDir(DIRECTORY_DOWNLOADS)
@@ -244,7 +243,6 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
                 workbook.write(fileOut)
                 fileOut.close()
                 workbook.close()
-
                 Log.d("생성 성공", "==================================================== 생성성공")
 
                 navController.popBackStack()

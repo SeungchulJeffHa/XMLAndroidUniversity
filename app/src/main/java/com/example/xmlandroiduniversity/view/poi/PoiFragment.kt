@@ -41,12 +41,22 @@ class PoiFragment : Fragment(), View.OnClickListener{
 
     private val adapterListener = object : POIAdapterListener {
         override fun onListItemPressed(data: ExcelFileEntity) {
-//            super.onListItemPressed(data)
-            Log.d("Info Entity", "$data")
+//            showFileDetailsDialog(data)
+            moveToReadPage(data)
         }
 
-        override fun onListItemCheckboxPressed(data: ExcelFileEntity) {
-            super.onListItemCheckboxPressed(data)
+        private fun moveToReadPage(data: ExcelFileEntity) {
+            excelVM.filename = data.name
+            navController.navigate(action_poiFragment_to_viewExcelFragment)
+        }
+
+        private fun showFileDetailsDialog(data: ExcelFileEntity) {
+            // 파일의 상세 정보를 다이얼로그로 표시하는 로직을 여기에 추가
+            val alertDialogBuilder = AlertDialog.Builder(requireContext())
+            alertDialogBuilder.setTitle("File Details")
+            alertDialogBuilder.setMessage("File Name: ${data.name}\nCreated At: ${data.createdAt}")
+            alertDialogBuilder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            alertDialogBuilder.show()
         }
     }
 

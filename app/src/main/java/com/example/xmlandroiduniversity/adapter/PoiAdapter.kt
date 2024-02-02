@@ -1,9 +1,13 @@
 package com.example.xmlandroiduniversity.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -12,7 +16,8 @@ import com.example.xmlandroiduniversity.databinding.ListitemExcelListBinding
 import com.example.xmlandroiduniversity.db.ExcelFileEntity
 import com.example.xmlandroiduniversity.db.RoomDb
 
-class PoiAdapter(private var items: List<ExcelFileEntity>, private val roomDb: RoomDb, private val listener: POIAdapterListener) : RecyclerView.Adapter<PoiAdapter.ViewHolder>() {
+class PoiAdapter(private var items: List<ExcelFileEntity>, private val roomDb: RoomDb, private val listener: POIAdapterListener) :
+    RecyclerView.Adapter<PoiAdapter.ViewHolder>() {
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PoiAdapter.ViewHolder {
@@ -37,9 +42,6 @@ class PoiAdapter(private var items: List<ExcelFileEntity>, private val roomDb: R
     }
 
     override fun getItemCount(): Int {
-
-        Log.d("아이템 개스", "=========================================${items.size}")
-
         return items.size
     }
 
@@ -49,13 +51,22 @@ class PoiAdapter(private var items: List<ExcelFileEntity>, private val roomDb: R
     }
 
     inner class ViewHolder(val binding: ListitemExcelListBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            // 파일 목록 아이템 전체에 대한 클릭 이벤트 리스너 설정
+            binding.fileList.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val item = items[position]
+                    // 클릭 이벤트를 POIAdapterListener를 통해 전달
+                    listener.onListItemPressed(item)
+                }
+            }
+        }
+
         fun bind(item: ExcelFileEntity) {
             binding.excelName.text = item.name
             binding.excelCreatedAt.text = item.createdAt
-
-            binding.slctFile.setOnClickListener {
-                listener.onListItemCheckboxPressed(item)
-            }
         }
     }
 }
