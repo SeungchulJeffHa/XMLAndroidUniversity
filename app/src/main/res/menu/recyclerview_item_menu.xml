@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/menu/recyclerview_item_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itemSaveLater"
+        android:title="나중에 볼 동영상에 저장" />
+    <item
+        android:id="@+id/itemSavePalyList"
+        android:title="재생목록에 저장" />
+    <item
+        android:id="@+id/itemSvaeOffline"
+        android:title="동영상 오프라인 저장" />
+    <item
+        android:id="@+id/itemShare"
+        android:title="공유" />
+    <item
+        android:id="@+id/itemRemove"
+        android:title="좋아요 표시한 동영상에서 삭제" />
+</menu>

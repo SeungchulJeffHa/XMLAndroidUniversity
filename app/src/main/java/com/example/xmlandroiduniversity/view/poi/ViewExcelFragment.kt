@@ -36,15 +36,15 @@ class ViewExcelFragment : Fragment(), View.OnClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentViewExcelBinding.inflate(inflater, container, false)
 
         with(binding) {
-
             backBtn.setOnClickListener(this@ViewExcelFragment)
-
         }
+
+        binding.excelTitle.text = excelVM.filename
 
         val adapter = ViewExcelAdapter(readExcelData(), excelVM)
         binding.excelTableView.layoutManager = LinearLayoutManager(context)

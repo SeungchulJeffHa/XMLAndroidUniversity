@@ -13,12 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.xmlandroiduniversity.MainActivity
 import com.example.xmlandroiduniversity.R.id.action_poiFragment_to_creatExcelFragment
 import com.example.xmlandroiduniversity.R.id.action_poiFragment_to_viewExcelFragment
 import com.example.xmlandroiduniversity.adapter.POIAdapterListener
 import com.example.xmlandroiduniversity.adapter.PoiAdapter
+import com.example.xmlandroiduniversity.adapter.SwipeHelperCallback
 import com.example.xmlandroiduniversity.databinding.DialogCreateExcelBinding
 import com.example.xmlandroiduniversity.databinding.FragmentPoiBinding
 import com.example.xmlandroiduniversity.db.ExcelFileEntity
@@ -29,42 +32,14 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
 class PoiFragment : Fragment(), View.OnClickListener{
     private var _binding: FragmentPoiBinding? = null
     private val binding get() = _binding!!
-    protected lateinit var navController: NavController
-    protected lateinit var roomDb: RoomDb
+    private lateinit var navController: NavController
+    private lateinit var roomDb: RoomDb
     private lateinit var mainActivity: MainActivity
     private val excelVM: ExcelViewModel by activityViewModels()
     private var items = mutableListOf<ExcelFileEntity>()
-
-    private val adapterListener = object : POIAdapterListener {
-        override fun onListItemPressed(data: ExcelFileEntity) {
-//            showFileDetailsDialog(data)
-            moveToReadPage(data)
-        }
-
-        private fun moveToReadPage(data: ExcelFileEntity) {
-            excelVM.filename = data.name
-            navController.navigate(action_poiFragment_to_viewExcelFragment)
-        }
-
-        private fun showFileDetailsDialog(data: ExcelFileEntity) {
-            // 파일의 상세 정보를 다이얼로그로 표시하는 로직을 여기에 추가
-            val alertDialogBuilder = AlertDialog.Builder(requireContext())
-            alertDialogBuilder.setTitle("File Details")
-            alertDialogBuilder.setMessage("File Name: ${data.name}\nCreated At: ${data.createdAt}")
-            alertDialogBuilder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-            alertDialogBuilder.show()
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupRecyclerView(items)
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -74,11 +49,18 @@ class PoiFragment : Fragment(), View.OnClickListener{
         navController = findNavController()
     }
 
+    private val adapterListener = object : POIAdapterListener {
+        override fun onListItemPressed(data: ExcelFileEntity) {
+            moveToReadPage(data)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         runBlocking {
             roomDb.excelFileDao().delete()
         }
+
         loadExcelFile()
 
         setupRecyclerView(runBlocking {
@@ -92,6 +74,63 @@ class PoiFragment : Fragment(), View.OnClickListener{
             roomDb.excelFileDao().delete()
         }
         loadExcelFile()
+    }
+
+    @SuppressLint("NotifyDataSetChanged", "ClickableViewAccessibility")
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
+        _binding = FragmentPoiBinding.inflate(inflater, container, false)
+
+        with(binding) {
+            createBtn.setOnClickListener(this@PoiFragment)
+            readBtn.setOnClickListener(this@PoiFragment)
+            updateBtn.setOnClickListener(this@PoiFragment)
+            deleteBtn.setOnClickListener(this@PoiFragment)
+        }
+
+        val recyclerViewAdapter = PoiAdapter(items, roomDb, adapterListener)
+        binding.recyclerView.adapter = recyclerViewAdapter
+
+        // 리사이클러뷰에 스와이프, 드래그 기능 달기
+        val swipeHelperCallback = SwipeHelperCallback(recyclerViewAdapter).apply {
+            // 스와이프한 뒤 고정시킬 위치 지정
+            setClamp((resources.displayMetrics.widthPixels.toFloat() / 3.5).toFloat())    // 1080 / 4 = 270
+        }
+
+        ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(binding.recyclerView)
+        // 구분선 추가
+        binding.recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+
+        // 다른 곳 터치 시 기존 선택했던 뷰 닫기
+        binding.recyclerView.setOnTouchListener { _, _ ->
+            swipeHelperCallback.removePreviousClamp(binding.recyclerView)
+            false
+        }
+
+        return binding.root
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            binding.createBtn -> {
+                createExcel()
+            }
+
+            binding.readBtn -> {
+                readExcel()
+            }
+
+            binding.updateBtn -> {
+                updateExcel()
+            }
+
+            binding.deleteBtn -> {
+                deleteExcel()
+            }
+        }
     }
 
     private fun loadExcelFile() {
@@ -120,45 +159,7 @@ class PoiFragment : Fragment(), View.OnClickListener{
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        super.onCreateView(inflater, container, savedInstanceState)
-        _binding = FragmentPoiBinding.inflate(inflater, container, false)
-
-        with(binding) {
-            createBtn.setOnClickListener(this@PoiFragment)
-            readBtn.setOnClickListener(this@PoiFragment)
-            updateBtn.setOnClickListener(this@PoiFragment)
-            deleteBtn.setOnClickListener(this@PoiFragment)
-        }
-
-        return binding.root
-    }
-
-    override fun onClick(v: View?) {
-        when (v) {
-            binding.createBtn -> {
-                createExcel()
-            }
-
-            binding.readBtn -> {
-                readExcel()
-            }
-
-            binding.updateBtn -> {
-                updateExcel()
-            }
-
-            binding.deleteBtn -> {
-                deleteExcel()
-            }
-        }
-    }
-
-    private fun setupRecyclerView(dataList: List<ExcelFileEntity>) {
+    private fun setupRecyclerView(dataList: MutableList<ExcelFileEntity>) {
         val adapter = PoiAdapter(items, roomDb, adapterListener)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
@@ -200,5 +201,19 @@ class PoiFragment : Fragment(), View.OnClickListener{
 
     private fun deleteExcel() {
         Log.d("POI", "===========================================deleteExcel")
+    }
+
+    fun moveToReadPage(data: ExcelFileEntity) {
+        excelVM.filename = data.name
+        navController.navigate(action_poiFragment_to_viewExcelFragment)
+    }
+
+    private fun showFileDetailsDialog(data: ExcelFileEntity) {
+        // 파일의 상세 정보를 다이얼로그로 표시하는 로직을 여기에 추가
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("File Details")
+        alertDialogBuilder.setMessage("File Name: ${data.name}\nCreated At: ${data.createdAt}")
+        alertDialogBuilder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+        alertDialogBuilder.show()
     }
 }

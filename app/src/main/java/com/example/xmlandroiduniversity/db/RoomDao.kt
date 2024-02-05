@@ -10,7 +10,7 @@ import androidx.room.Update
 interface ExcelFileDao {
 
     @Query("SELECT * FROM excel_file")
-    suspend fun select(): List<ExcelFileEntity>
+    suspend fun select(): MutableList<ExcelFileEntity>
 
     @Insert
     suspend fun insert(entity: ExcelFileEntity)

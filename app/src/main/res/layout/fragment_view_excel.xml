@@ -22,6 +22,8 @@
         android:id="@+id/excelTableView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@id/backBtn"
         app:layout_constraintEnd_toEndOf="parent"
