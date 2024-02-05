@@ -6,17 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".view.poi.ViewExcelFragment">
 
-    <TextView
+    <EditText
         android:id="@+id/excelTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="test1.xlsx"
+        android:text="test1"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=".xlsx"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/excelTitle"
+        app:layout_constraintBaseline_toBaselineOf="@id/excelTitle"
+        tools:layout_editor_absoluteY="26dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/excelTableView"
@@ -25,18 +35,20 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@id/backBtn"
+        app:layout_constraintBottom_toTopOf="@+id/editBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/excelTitle"
         tools:listitem="@layout/listitem_excel_row" />
 
-
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/backBtn"
+        android:id="@+id/editBtn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="뒤로"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:text="수정"
+        android:visibility="gone"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

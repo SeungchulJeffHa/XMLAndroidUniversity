@@ -19,6 +19,7 @@ import com.example.xmlandroiduniversity.adapter.ViewExcelAdapter
 import com.example.xmlandroiduniversity.databinding.FragmentCreateExcelBinding
 import com.example.xmlandroiduniversity.databinding.FragmentViewExcelBinding
 import com.example.xmlandroiduniversity.databinding.ListitemExcelRowBinding
+import com.example.xmlandroiduniversity.global.Constant
 import com.example.xmlandroiduniversity.viewmodels.ExcelViewModel
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.FileInputStream
@@ -29,9 +30,12 @@ class ViewExcelFragment : Fragment(), View.OnClickListener {
     protected lateinit var navController: NavController
     private val excelVM: ExcelViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,28 +45,23 @@ class ViewExcelFragment : Fragment(), View.OnClickListener {
         _binding = FragmentViewExcelBinding.inflate(inflater, container, false)
 
         with(binding) {
-            backBtn.setOnClickListener(this@ViewExcelFragment)
+//            backBtn.setOnClickListener(this@ViewExcelFragment)
+        }
+        if (excelVM.viewMode == Constant.EDITMODE) {
+            binding.editBtn.visibility = View.VISIBLE
+        } else {
+            binding.editBtn.visibility = View.GONE
         }
 
-        binding.excelTitle.text = excelVM.filename
+        val fileName = excelVM.filename?.substring(0, excelVM.filename!!.length - 5)
+
+        binding.excelTitle.setText(fileName)
 
         val adapter = ViewExcelAdapter(readExcelData(), excelVM)
         binding.excelTableView.layoutManager = LinearLayoutManager(context)
         binding.excelTableView.adapter = adapter
 
         return binding.root
-    }
-
-    private fun createDummyData(): List<List<String>> {
-        val dummyData = mutableListOf<List<String>>()
-        for (i in 1..10) {
-            val row = mutableListOf<String>()
-            for (j in 1..10) {
-                row.add("Row $i, Col $j")
-            }
-            dummyData.add(row)
-        }
-        return dummyData
     }
 
     private fun readExcelData(): List<List<String>> {
@@ -87,7 +86,6 @@ class ViewExcelFragment : Fragment(), View.OnClickListener {
                 val rowData: MutableList<String> = mutableListOf()
                 for (columnIndex in 0 until columnCount) {
                     val cell = row.getCell(columnIndex)
-                    Log.d("value", cell.toString())
                     rowData.add(cell.toString())
                 }
                 excelData.add(rowData)
@@ -101,9 +99,9 @@ class ViewExcelFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when(v) {
-            binding.backBtn -> {
-
-            }
+//            binding.backBtn -> {
+//
+//            }
         }
     }
 

@@ -198,11 +198,6 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
 
         // 헤더 추가
         val headerRow = sheet.createRow(0)
-//        val headers = arrayOf("name", "line", "order", "name", "name", "line", "order", "name", "name", "line", "order", "name")
-//        for ((index, header) in headers.withIndex()) {
-//            val cell: Cell = headerRow.createCell(index)
-//            cell.setCellValue(header)
-//        }
 
         for (i in 1..excelVM.colCount) {
             val cell: Cell = headerRow.createCell(i-1)
@@ -212,8 +207,6 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
             val value = editText.text.toString()
 
             cell.setCellValue(value)
-
-
         }
 
         // 데이터 추가

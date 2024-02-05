@@ -26,6 +26,7 @@ import com.example.xmlandroiduniversity.databinding.DialogCreateExcelBinding
 import com.example.xmlandroiduniversity.databinding.FragmentPoiBinding
 import com.example.xmlandroiduniversity.db.ExcelFileEntity
 import com.example.xmlandroiduniversity.db.RoomDb
+import com.example.xmlandroiduniversity.global.Constant
 import com.example.xmlandroiduniversity.viewmodels.ExcelViewModel
 import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
@@ -51,7 +52,8 @@ class PoiFragment : Fragment(), View.OnClickListener{
 
     private val adapterListener = object : POIAdapterListener {
         override fun onListItemPressed(data: ExcelFileEntity) {
-            moveToReadPage(data)
+            excelVM.viewMode = Constant.READMODE
+            excelVM.moveToReadPage(data, navController)
         }
     }
 
@@ -86,12 +88,9 @@ class PoiFragment : Fragment(), View.OnClickListener{
 
         with(binding) {
             createBtn.setOnClickListener(this@PoiFragment)
-            readBtn.setOnClickListener(this@PoiFragment)
-            updateBtn.setOnClickListener(this@PoiFragment)
-            deleteBtn.setOnClickListener(this@PoiFragment)
         }
 
-        val recyclerViewAdapter = PoiAdapter(items, roomDb, adapterListener)
+        val recyclerViewAdapter = PoiAdapter(items, roomDb, adapterListener, excelVM, navController)
         binding.recyclerView.adapter = recyclerViewAdapter
 
         // 리사이클러뷰에 스와이프, 드래그 기능 달기
@@ -117,18 +116,6 @@ class PoiFragment : Fragment(), View.OnClickListener{
         when (v) {
             binding.createBtn -> {
                 createExcel()
-            }
-
-            binding.readBtn -> {
-                readExcel()
-            }
-
-            binding.updateBtn -> {
-                updateExcel()
-            }
-
-            binding.deleteBtn -> {
-                deleteExcel()
             }
         }
     }
@@ -160,7 +147,7 @@ class PoiFragment : Fragment(), View.OnClickListener{
     }
 
     private fun setupRecyclerView(dataList: MutableList<ExcelFileEntity>) {
-        val adapter = PoiAdapter(items, roomDb, adapterListener)
+        val adapter = PoiAdapter(items, roomDb, adapterListener, excelVM, navController)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
 
@@ -187,25 +174,6 @@ class PoiFragment : Fragment(), View.OnClickListener{
             }
         }
 
-    }
-
-    private fun readExcel() {
-        Log.d("POI", "===========================================readExcel")
-
-        navController.navigate(action_poiFragment_to_viewExcelFragment)
-    }
-
-    private fun updateExcel() {
-        Log.d("POI", "===========================================updateExcel")
-    }
-
-    private fun deleteExcel() {
-        Log.d("POI", "===========================================deleteExcel")
-    }
-
-    fun moveToReadPage(data: ExcelFileEntity) {
-        excelVM.filename = data.name
-        navController.navigate(action_poiFragment_to_viewExcelFragment)
     }
 
     private fun showFileDetailsDialog(data: ExcelFileEntity) {

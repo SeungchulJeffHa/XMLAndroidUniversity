@@ -1,18 +1,30 @@
 package com.example.xmlandroiduniversity.adapter
 
 import android.content.Context
+import android.os.Environment.DIRECTORY_DOWNLOADS
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.xmlandroiduniversity.R
 import com.example.xmlandroiduniversity.databinding.ListitemExcelListBinding
 import com.example.xmlandroiduniversity.db.ExcelFileEntity
 import com.example.xmlandroiduniversity.db.RoomDb
+import com.example.xmlandroiduniversity.global.Constant
+import com.example.xmlandroiduniversity.viewmodels.ExcelViewModel
 import java.util.Collections
 
-class PoiAdapter(private var items: MutableList<ExcelFileEntity>, private val roomDb: RoomDb, private val listener: POIAdapterListener) :
+class PoiAdapter(
+    private var items: MutableList<ExcelFileEntity>,
+    private val roomDb: RoomDb,
+    private val listener: POIAdapterListener,
+    private val excelViewModel: ExcelViewModel,
+    private val navController: NavController
+) :
     RecyclerView.Adapter<PoiAdapter.MyViewHolder>() {
     private lateinit var context: Context
 
@@ -95,15 +107,41 @@ class PoiAdapter(private var items: MutableList<ExcelFileEntity>, private val ro
                 popup.show()
             }
 
+
+            binding.tvEdit.setOnClickListener {
+                excelViewModel.viewMode = Constant.EDITMODE
+                excelViewModel.moveToReadPage(data, navController)
+            }
+
             // 삭제 텍스트뷰 클릭시 토스트 표시
             binding.tvRemove.setOnClickListener {
                 removeData(this.layoutPosition)
-                Toast.makeText(binding.root.context, "삭제했습니다.", Toast.LENGTH_SHORT).show()
+
+                val externalFilesDir = context.getExternalFilesDir(DIRECTORY_DOWNLOADS)
+
+                // 외부 다운로드 디렉토리에 있는 파일 목록 가져오기
+                val files = externalFilesDir?.listFiles { file ->
+                    file.isFile && file.name == data.name
+                }
+
+                // 파일이 존재하면 삭제
+                files?.forEach { file ->
+                    if (file.exists()) {
+                        val deleted = file.delete()
+                        if (deleted) {
+                            // 파일이 성공적으로 삭제되었음
+                            // 추가적인 작업을 수행할 수 있습니다.
+                            println("File ${data.name} deleted successfully.")
+                        } else {
+                            // 파일 삭제 실패
+                            println("Failed to delete file ${data.name}.")
+                        }
+                    }
+                }
+
+                Toast.makeText(binding.root.context, "${data.name}을 삭제했습니다.", Toast.LENGTH_SHORT).show()
             }
-            
-            binding.tvEdit.setOnClickListener {
-                Toast.makeText(binding.root.context, "수정버튼.", Toast.LENGTH_SHORT).show()
-            }
+
         }
     }
 }

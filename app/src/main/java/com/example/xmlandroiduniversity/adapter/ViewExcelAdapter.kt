@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -15,9 +16,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.xmlandroiduniversity.R
 import com.example.xmlandroiduniversity.databinding.ListitemExcelRowBinding
+import com.example.xmlandroiduniversity.global.Constant
 import com.example.xmlandroiduniversity.viewmodels.ExcelViewModel
 
-class ViewExcelAdapter(private val items: List<List<String>>, private val viewModel: ExcelViewModel) : RecyclerView.Adapter<ViewExcelAdapter.ViewHolder>() {
+class ViewExcelAdapter(private val items: List<List<String>>, private val viewModel: ExcelViewModel) :
+    RecyclerView.Adapter<ViewExcelAdapter.ViewHolder>() {
 
     private lateinit var context: Context
 
@@ -49,15 +52,13 @@ class ViewExcelAdapter(private val items: List<List<String>>, private val viewMo
             val id = View.generateViewId()
             viewModel.horizontalScrollID.add(id)
             horizontalScrollView.id = id
-
             horizontalScrollView.isHorizontalScrollBarEnabled = false
 
             val linearLayout = LinearLayout(context)
             linearLayout.orientation = LinearLayout.HORIZONTAL
 
             for (value in item) {
-                val textView = TextView(context)
-                textView.text = value
+                val editText = EditText(context)
 
                 val layoutParams = LinearLayout.LayoutParams(
                     80.dpToPx(),
@@ -65,21 +66,26 @@ class ViewExcelAdapter(private val items: List<List<String>>, private val viewMo
                 )
 
                 val shapeDrawable = ContextCompat.getDrawable(context, R.drawable.border_background)
-                textView.background = shapeDrawable
-                textView.gravity = Gravity.CENTER
 
-                textView.setTextColor(ContextCompat.getColor(context, R.color.black))
-                textView.setPadding(16, 16, 16, 16)
+                with(editText) {
+                    editText.setText(value)
 
-                textView.layoutParams = layoutParams
+                    if (viewModel.viewMode == Constant.READMODE) {
+                        editText.isEnabled = false;
+                    }
 
-                linearLayout.addView(textView)
+                    editText.background = shapeDrawable
+                    editText.gravity = Gravity.CENTER
+                    editText.setTextColor(ContextCompat.getColor(context, R.color.black))
+                    editText.setPadding(16, 16, 16, 16)
+                    editText.maxLines = 1;
+                    editText.layoutParams = layoutParams
+                    linearLayout.addView(editText)
+                }
             }
 
             horizontalScrollView.addView(linearLayout)
             binding.root.addView(horizontalScrollView)
-
-
         }
     }
 }

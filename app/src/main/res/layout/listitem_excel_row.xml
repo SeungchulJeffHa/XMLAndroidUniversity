@@ -20,13 +20,14 @@
             android:orientation="horizontal">
 
             <!-- 예시로 TextView를 추가했지만 필요한 뷰들로 대체하세요 -->
-            <TextView
+            <EditText
                 android:layout_width="80dp"
                 android:layout_height="50dp"
+                android:gravity="center"
+                android:inputType="none"
                 android:text="Item 1"
                 android:background="@drawable/border_background"
-                android:textColor="@android:color/black"
-                android:padding="16dp" />
+                android:textColor="@android:color/black" />
 
             <!-- 추가적인 TextView나 다른 뷰들을 필요에 따라 계속해서 추가하세요 -->
 

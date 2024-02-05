@@ -33,7 +33,8 @@
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/divider2"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/divider2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider"
@@ -43,10 +44,9 @@
         android:id="@+id/divider2"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
         android:background="?android:attr/listDivider"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/readBtn"
+        app:layout_constraintBottom_toTopOf="@+id/createBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -54,49 +54,12 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/createBtn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
         android:text="엑셀파일생성"
-        android:layout_marginBottom="10dp"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/updateBtn"
-        app:layout_constraintEnd_toStartOf="@+id/readBtn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/deleteBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="엑셀파일삭제"
-        android:layout_marginBottom="10dp"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/updateBtn" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/updateBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="엑셀파일수정"
-        android:layout_marginBottom="10dp"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/deleteBtn"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/readBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="엑셀파일보기"
-        android:layout_marginBottom="10dp"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/deleteBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/createBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
