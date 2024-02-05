@@ -33,7 +33,7 @@ class CreateExcelFragment : Fragment(), View.OnClickListener {
 
     private var _binding: FragmentCreateExcelBinding? = null
     private val binding get() = _binding!!
-    protected lateinit var navController: NavController
+    private lateinit var navController: NavController
 
     private val excelVM: ExcelViewModel by activityViewModels()
 

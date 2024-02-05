@@ -24,6 +24,9 @@ class ViewExcelAdapter(private val items: List<List<String>>, private val viewMo
 
     private lateinit var context: Context
 
+    private var row: Int = 0
+    private var col: Int = 0
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewExcelAdapter.ViewHolder {
         val binding = ListitemExcelRowBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -49,9 +52,11 @@ class ViewExcelAdapter(private val items: List<List<String>>, private val viewMo
 
             val horizontalScrollView = HorizontalScrollView(context)
 
-            val id = View.generateViewId()
-            viewModel.horizontalScrollID.add(id)
-            horizontalScrollView.id = id
+            viewModel.horizontalScrollID.add(row)
+            horizontalScrollView.tag = row
+//            val id = View.generateViewId()
+//            viewModel.horizontalScrollID.add(id)
+//            horizontalScrollView.id = id
             horizontalScrollView.isHorizontalScrollBarEnabled = false
 
             val linearLayout = LinearLayout(context)
@@ -69,6 +74,8 @@ class ViewExcelAdapter(private val items: List<List<String>>, private val viewMo
 
                 with(editText) {
                     editText.setText(value)
+                    editText.tag = "r${row}c${col}"
+                    Log.d("값", "${value} ROW: $row // COLUMN: $col")
 
                     if (viewModel.viewMode == Constant.READMODE) {
                         editText.isEnabled = false;
@@ -81,12 +88,18 @@ class ViewExcelAdapter(private val items: List<List<String>>, private val viewMo
                     editText.maxLines = 1;
                     editText.layoutParams = layoutParams
                     linearLayout.addView(editText)
+
+                    col += 1
                 }
             }
 
             horizontalScrollView.addView(linearLayout)
             binding.root.addView(horizontalScrollView)
+
+            row +=1
+            col = 0
         }
+
     }
 }
 
