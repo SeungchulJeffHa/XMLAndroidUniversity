@@ -1,45 +1,34 @@
 pipeline {
     agent any
 
-    options {
-        skipStagesAfterUnstable()
-    }
-
-    tools {
-        jdk("JAVA17")
-    }
-
     environment {
-        // Build Variant에 대해서 설정했었다면 어떤 Variant로 Build할지 선택하기.
-        BUILD_VARIANT = "Debug" // "DevAlpha"
+        GIT_URL = "https://github.com/baeyuna97/K8S.git"
     }
 
     stages {
-        stage("Environment") {
+        stage('Pull') {
             steps {
-                script {
-
-                    // withCredentials([string(credentialsId: "build-pwd", variable: "PWD")]) {
-                    //    env.DevKeyPassword = "${PWD}"
-                    //    env.DevStorePassword = "${PWD}"
-                    //    env.ProductKeyPassword = "${PWD}"
-                    //    env.ProductStorePassword = "${PWD}"
-                    // }
-                }
+                git url: "${GIT_URL}", branch: "main", poll: true, changelog: true
             }
         }
 
-        stage("Unit Test") {
+        stage('Build') {
             steps {
-                sh "./gradlew test${env.BUILD_VARIANT}UnitTest --stacktrace"
-                junit "**/TEST-*.xml"
+                sh 'docker build -t yuna1do/hello .'
             }
         }
 
-        stage("Assemble") {
-            steps {
-                sh "./gradlew assemble${env.BUILD_VARIANT} --stacktrace"
-                archiveArtifacts artifacts: "**/*.apk, **/mapping.txt", fingerprint: true
+        stage('Deploy'){
+            steps{
+                sh 'docker stop hello'
+                sh 'docker rm hello'
+                sh 'docker run -d --name hello -p 80:80 -p 443:443 -v /etc/letsencrypt/archive:/etc/letsencrypt/archive -u root yuna1do/hello:test'
+            }
+        }
+
+       stage('Finish') {
+            steps{
+                sh 'docker images -qf dangling=true | xargs -I{} docker rmi {}'
             }
         }
     }
