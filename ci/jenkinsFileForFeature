@@ -11,7 +11,7 @@ pipeline {
 
     environment {
         // Build Variant에 대해서 설정했었다면 어떤 Variant로 Build할지 선택하기.
-        BUILD_VARIANT = "Debug" //"DevAlpha"
+        BUILD_VARIANT = "Debug" // "DevAlpha"
     }
 
     stages {
@@ -19,12 +19,12 @@ pipeline {
             steps {
                 script {
 
-                    //withCredentials([string(credentialsId: "build-pwd", variable: "PWD")]) {
+                    // withCredentials([string(credentialsId: "build-pwd", variable: "PWD")]) {
                     //    env.DevKeyPassword = "${PWD}"
                     //    env.DevStorePassword = "${PWD}"
                     //    env.ProductKeyPassword = "${PWD}"
                     //    env.ProductStorePassword = "${PWD}"
-                    //}
+                    // }
                 }
             }
         }
