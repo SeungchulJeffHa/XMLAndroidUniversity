@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    options {
+        skipStagesAfterUnstable()
+    }
+
+    tools {
+        jdk("JAVA17")
+    }
+
+    environment {
+        // Build Variant에 대해서 설정했었다면 어떤 Variant로 Build할지 선택하기.
+        BUILD_VARIANT = "Debug" //"DevAlpha"
+    }
+
+    stages {
+        stage("Environment") {
+            steps {
+                script {
+
+                    //withCredentials([string(credentialsId: "build-pwd", variable: "PWD")]) {
+                    //    env.DevKeyPassword = "${PWD}"
+                    //    env.DevStorePassword = "${PWD}"
+                    //    env.ProductKeyPassword = "${PWD}"
+                    //    env.ProductStorePassword = "${PWD}"
+                    //}
+                }
+            }
+        }
+
+        stage("Unit Test") {
+            steps {
+                sh "./gradlew test${env.BUILD_VARIANT}UnitTest --stacktrace"
+                junit "**/TEST-*.xml"
+            }
+        }
+
+        stage("Assemble") {
+            steps {
+                sh "./gradlew assemble${env.BUILD_VARIANT} --stacktrace"
+                archiveArtifacts artifacts: "**/*.apk, **/mapping.txt", fingerprint: true
+            }
+        }
+    }
+}
