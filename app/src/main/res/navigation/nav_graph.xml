@@ -3,7 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/poiFragment">
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.xmlandroiduniversity.view.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+
+    <action
+        android:id="@+id/action_homeFragment_to_poiFragment"
+        app:destination="@id/poiFragment" />
+
+    <action
+        android:id="@+id/action_homeFragment_to_basicHandlerFragment"
+        app:destination="@id/basicHandlerFragment" />
 
     <fragment
         android:id="@+id/poiFragment"
@@ -30,4 +44,11 @@
         android:name="com.example.xmlandroiduniversity.view.poi.ViewExcelFragment"
         android:label="fragment_view_excel"
         tools:layout="@layout/fragment_view_excel" />
+
+    <fragment
+        android:id="@+id/basicHandlerFragment"
+        android:name="com.example.xmlandroiduniversity.view.handler.BasicHandlerFragment"
+        android:label="fragment_basic_handler"
+        tools:layout="@layout/fragment_basic_handler" />
+
 </navigation>

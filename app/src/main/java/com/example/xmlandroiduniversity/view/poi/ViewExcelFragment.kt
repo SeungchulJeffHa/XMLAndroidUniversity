@@ -98,8 +98,6 @@ class ViewExcelFragment : Fragment(), View.OnClickListener {
                            // 셀에 새 값을 설정 (예: "새로운 값")
                            cell.setCellValue(editTextWithTag?.text.toString())
 
-
-
                        }
 
                    }

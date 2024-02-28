@@ -12,3 +12,4 @@ data class ExcelFileEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") var stationId: Long = 0
 )
+
