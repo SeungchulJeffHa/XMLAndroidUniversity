@@ -1,4 +1,4 @@
-package com.example.xmlandroiduniversity.data
+package com.example.xmlandroiduniversity.data.poi
 import javax.inject.Inject
 import javax.inject.Singleton
 

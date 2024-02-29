@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="header">
-        <item name="android:fontWeight">600</item>
-        <item name="android:textColor">@color/red</item>
+        <item name="android:fontWeight">900</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/header</item>
+    </style>
+
+    <style name="regularEDT">
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textSize">@dimen/edt</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="regularLabel">
+        <item name="android:textSize">@dimen/edt</item>
+        <item name="android:fontWeight">900</item>
     </style>
 </resources>

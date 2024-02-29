@@ -19,6 +19,10 @@
         android:id="@+id/action_homeFragment_to_basicHandlerFragment"
         app:destination="@id/basicHandlerFragment" />
 
+    <action
+        android:id="@+id/action_homeFragment_to_retrofitFragment"
+        app:destination="@id/retrofitFragment" />
+
     <fragment
         android:id="@+id/poiFragment"
         android:name="com.example.xmlandroiduniversity.view.poi.PoiFragment"
@@ -50,5 +54,10 @@
         android:name="com.example.xmlandroiduniversity.view.handler.BasicHandlerFragment"
         android:label="fragment_basic_handler"
         tools:layout="@layout/fragment_basic_handler" />
+    <fragment
+        android:id="@+id/retrofitFragment"
+        android:name="com.example.xmlandroiduniversity.view.retrofit.RetrofitFragment"
+        android:label="fragment_retrofit"
+        tools:layout="@layout/fragment_retrofit" />
 
 </navigation>

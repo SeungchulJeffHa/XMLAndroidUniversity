@@ -1,10 +1,8 @@
 package com.example.xmlandroiduniversity.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.xmlandroiduniversity.R
-import com.example.xmlandroiduniversity.data.SubwayData
 import com.example.xmlandroiduniversity.db.ExcelFileEntity
 import com.example.xmlandroiduniversity.global.Constant
 

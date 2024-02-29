@@ -44,7 +44,7 @@ class HomeFragment : Fragment(), View.OnClickListener, HomeGridAdapterListener {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        val menuItems = listOf(MenuItem(1, "POI"), MenuItem(2, "Handler"))
+        val menuItems = listOf(MenuItem(1, "POI"), MenuItem(2, "Handler"), MenuItem(3, "Retrofit2"))
         val adapter = HomeGridAdapter(requireContext(), menuItems, adapterListener)
 
         with(binding) {
@@ -66,6 +66,9 @@ class HomeFragment : Fragment(), View.OnClickListener, HomeGridAdapterListener {
                 }
                 2 -> {
                     navController.navigate(R.id.action_homeFragment_to_basicHandlerFragment)
+                }
+                3 -> {
+                    navController.navigate(R.id.action_homeFragment_to_retrofitFragment)
                 }
             }
         }
